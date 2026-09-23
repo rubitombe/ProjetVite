@@ -1,13 +1,14 @@
 // src/composants/Bouton.tsx
 
 export type VarianteBouton = "primaire" | "secondaire" | "danger";
-
+export type TypeBouton ="button" | "submit";
 export interface BoutonProps {
   libelle: string;
   variante?: VarianteBouton;
   desactive?: boolean;
   onClick?: () => void;
   type?: TypeBouton;
+  
 }
 
 const base =
@@ -41,6 +42,4 @@ export function Bouton({
     </button>
   );
 }
-
-export type TypeBouton ="button" | "submit";
 

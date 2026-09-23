@@ -1,43 +1,42 @@
-import { FILMS, trierPar, filtrerParGenre } from "./lib/utils";
-import { ListeFilms } from "./composants/ListeFilms";
-import type { genres } from "./lib/utils";
- 
- 
-function App() {
-  const filmsTries = trierPar(FILMS, "titre");
-  const documentaires = filtrerParGenre(FILMS, "Documentaire" as genres);
- 
+import { useState } from "react";
+import type { Inscription } from "./lib/inscription";
+import { ListeInscription } from "./composants/ListeInscription";
+import { FormulaireInscription } from "./composants/FormulaireInscription";
+
+
+export type InscriptionEnregistree = Omit<Inscription, "motDePasse" | "confirmation"> & {id: number};
+
+export default function App(){
+  const [inscriptions, setInscriptions] = useState<InscriptionEnregistree[]>([]);
+
+
+  const ajouterInscription = (donnees: Inscription)=>{
+    const { motDePasse, confirmation, ...rest } = donnees;
+    const nouvelleInscription: InscriptionEnregistree = {
+      ...rest,
+      id: Date.now()
+    };
+    setInscriptions((liste) => [nouvelleInscription, ...liste]);
+  }
+
+  const supprimerInscription = (id: number) => {
+    setInscriptions((liste) => liste.filter((item) => item.id !== id));
+  };
   return (
-    <main className="p-6 space-y-10">
-      <h1 className="text-3xl font-bold">Catalogue de films</h1>
- 
+    <main className="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
       <section>
-        <h2 className="text-xl font-semibold mb-4">Tous les films</h2>
-        <ListeFilms films={filmsTries} messageVide="Aucun film trouvé" />
+        <h1 className="text-2xl font-bold mb-4">Créer un compte</h1>
+        <FormulaireInscription onInscription={ajouterInscription} />
       </section>
- 
+
       <section>
-        <h2 className="text-xl font-semibold mb-4">Documentaires</h2>
-        <ListeFilms
-          films={documentaires}
-          messageVide="Aucun documentaire dans le catalogue pour le moment."
+        <h2 className="text-2xl font-bold mb-4">Inscrits</h2>
+        <ListeInscription
+          inscriptions={inscriptions}
+          onSuppression={supprimerInscription}
         />
-      </section>
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Les quatre états du composant bouton</h2>
- 
-        <div className="flex gap-4 flex-wrap">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded">Action principale</button>
-          <button className="bg-gray-600 text-white px-4 py-2 rounded">Action secondaire</button>
-          <button className="bg-red-600 text-white px-4 py-2 rounded">Supprimer</button>
-          <button className="bg-gray-300 text-gray-600 px-4 py-2 rounded cursor-not-allowed">
-            Indisponible
-          </button>
-        </div>
       </section>
     </main>
   );
+
 }
- 
-export default App;
- 
