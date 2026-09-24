@@ -15,9 +15,9 @@ export interface ReponseRecherche {
   Error?: string;
 }
 
-function getUrlRecherche(titre: string): string {
-  const url = new URL("http://www.omdbapi.com/");
-  url.searchParams.set("apikey", "7953c567");
+export function getUrlRecherche(titre: string): string {
+  const url = new URL("https://www.omdbapi.com/");
+  url.searchParams.set("apikey", import.meta.env.VITE_OMDB_KEY || "");
   url.searchParams.set("s", titre);
   return url.toString();
 }
